@@ -1,7 +1,7 @@
 import threading
 import utils
 
-MAX_THREADS = 10
+MAX_THREADS = 20
 semaphore = threading.Semaphore(MAX_THREADS)
 
 

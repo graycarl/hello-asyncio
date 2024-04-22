@@ -2,8 +2,8 @@ from multiprocessing import Process
 from concurrent.futures import ThreadPoolExecutor
 import utils
 
-NUM_WORKERS = 5
-NUM_THREADS_PER_WORKER = 10
+NUM_WORKERS = 4
+NUM_THREADS_PER_WORKER = 5
 
 
 def run(server_socket):

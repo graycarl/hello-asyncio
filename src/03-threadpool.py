@@ -1,7 +1,7 @@
 import concurrent.futures
 import utils
 
-MAX_THREADS = 10
+MAX_THREADS = 20
 
 def main():
     listen_socket = utils.listen()

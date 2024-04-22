@@ -3,6 +3,7 @@ import os
 import socket
 import textwrap
 from time import sleep
+import random
 import time
 
 
@@ -42,6 +43,7 @@ def handler(client_connection, cpu_time=0.05, io_time=0.05, piece=0.01):
     for _ in range(int(io_time / piece)):
         tasks.append(lambda: sleep(piece))
 
+    random.shuffle(tasks)
     for task in tasks:
         task()
 
