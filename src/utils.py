@@ -24,20 +24,26 @@ def listen(port=None):
     return listen_socket
 
 
-def handler(client_connection, cpu_time=0.05, io_time=0.05):
+def handler(client_connection, cpu_time=0.05, io_time=0.05, piece=0.01):
     """
     模拟 Http 服务器处理请求
     """
     _ = client_connection.recv(1024)
     # print(request_data.decode('utf-8'))
 
-    # 模拟 CPU 密集型任务
-    end_time = time.time() + cpu_time
-    while time.time() < end_time:
-        pass
+    def cpu_task(duration):
+        end_time = time.time() + duration
+        while time.time() < end_time:
+            pass
 
-    # 模拟 IO 密集型任务
-    sleep(io_time)
+    tasks = []
+    for _ in range(int(cpu_time / piece)):
+        tasks.append(lambda: cpu_task(piece))
+    for _ in range(int(io_time / piece)):
+        tasks.append(lambda: sleep(piece))
+
+    for task in tasks:
+        task()
 
     http_response = textwrap.dedent(f"""\
         HTTP/1.1 200 OK

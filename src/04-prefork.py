@@ -1,4 +1,3 @@
-import os
 from multiprocessing import Process
 from concurrent.futures import ThreadPoolExecutor
 import utils
@@ -23,8 +22,7 @@ def handle_request(server_socket):
     with ThreadPoolExecutor(max_workers=NUM_THREADS_PER_WORKER) as executor:
         while True:
             client_socket, _ = server_socket.accept()
-            print("Process ID: ", os.getpid())
-            utils.handler(client_socket)
+            executor.submit(utils.handler, client_socket)
 
 
 if __name__ == "__main__":
