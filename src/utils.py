@@ -24,7 +24,8 @@ def listen(port=None):
     return listen_socket
 
 
-def handler(client_connection, cpu_time=0.05, io_time=0.05, piece=0.01):
+def handler(client_connection,
+            cpu_time=0.05, io_time=0.05, piece=0.01, close=True):
     """
     模拟 Http 服务器处理请求
     """
@@ -56,4 +57,5 @@ def handler(client_connection, cpu_time=0.05, io_time=0.05, piece=0.01):
         TOTAL Time: {cpu_time + io_time}
     """)
     client_connection.sendall(http_response.encode())
-    client_connection.close()
+    if close:
+        client_connection.close()
