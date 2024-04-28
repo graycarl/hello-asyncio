@@ -29,9 +29,19 @@ def handler(client_connection,
     """
     模拟 Http 服务器处理请求
     """
-    _ = client_connection.recv(1024)
+    request = client_connection.recv(1024)
     # print(request_data.decode('utf-8'))
 
+    response = gen_response(request, cpu_time, io_time, piece)
+    client_connection.sendall(response)
+    if close:
+        client_connection.close()
+
+
+def gen_response(request: bytes, cpu_time=0.05, io_time=0.05, piece=0.01) -> bytes:
+    """
+    模拟 Http 服务器处理请求
+    """
     def cpu_task(duration):
         end_time = time.time() + duration
         while time.time() < end_time:
@@ -56,6 +66,4 @@ def handler(client_connection,
         IO Time: {io_time}
         TOTAL Time: {cpu_time + io_time}
     """)
-    client_connection.sendall(http_response.encode())
-    if close:
-        client_connection.close()
+    return http_response.encode()

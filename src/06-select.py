@@ -1,4 +1,5 @@
 import select
+import socket
 import utils
 
 def loop(server_socket):
@@ -7,7 +8,7 @@ def loop(server_socket):
     errors = []
 
     while inputs:
-        readable, writable, exceptional = select.select(inputs, outputs, errors)
+        readable, _, exceptional = select.select(inputs, outputs, errors)
 
         for s in readable:
             if s is server_socket:
@@ -15,16 +16,16 @@ def loop(server_socket):
                 client_connection.setblocking(False)
                 inputs.append(client_connection)
             else:
-                utils.handler(s, close=False)
-                if s not in outputs:
-                    outputs.append(s)
-
-        for s in writable:
-            if s in inputs:
-                inputs.remove(s)
-            if s in outputs:
-                outputs.remove(s)
-            s.close()
+                data = s.recv(1024)
+                if data:
+                    print('Receive data from connection: %d' % s.fileno())
+                    response = utils.gen_response(data)
+                    s.sendall(response)
+                    s.shutdown(socket.SHUT_RDWR)
+                else:
+                    print('Close connection: %d' % s.fileno())
+                    inputs.remove(s)
+                    s.close()
 
         for s in exceptional:
             if s in outputs:
